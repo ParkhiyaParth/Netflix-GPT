@@ -1,8 +1,25 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header";
+import { checkmsg } from "../utils/Validate";
 
 const Login = () => {
   const [isSignInForm, setisSignInForm] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const email = useRef();
+  const password = useRef();
+
+  const validatemsg = () => {
+    console.log(email.current.value);
+    console.log(password.current.value);
+
+    const msg = checkmsg(email.current.value, password.current.value);
+    if (msg === "Valid") {
+      setErrorMsg("");
+    } else {
+      setErrorMsg(msg);
+    }
+  };
 
   const toggleBtn = () => {
     setisSignInForm(!isSignInForm);
@@ -35,16 +52,22 @@ const Login = () => {
             />
           )}
           <input
+            ref={email}
             type="email"
             placeholder="Email Address"
             className="p-2 m-2 w-full bg-gray-700 text-white rounded"
           />
           <input
+            ref={password}
             type="password"
             placeholder="Password"
             className="p-2 m-2 w-full bg-gray-700 text-white rounded"
           />
-          <button className="w-full p-2 m-2 bg-red-600 text-white rounded hover:bg-red-700">
+          <p className="text-red-500 m-2">{errorMsg}</p>
+          <button
+            className="w-full p-2 m-2 bg-red-600 text-white rounded hover:bg-red-700"
+            onClick={validatemsg}
+          >
             {isSignInForm ? "Sign In" : "Sign Up"}
           </button>
           <span className="block text-center text-white mt-4">
