@@ -1,28 +1,75 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
 import { checkmsg } from "../utils/Validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignInForm, setisSignInForm] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [btn, setBtn] = useState("Sign In");
+  const navigate = useNavigate();
 
   const email = useRef();
   const password = useRef();
 
-  const validatemsg = () => {
-    console.log(email.current.value);
-    console.log(password.current.value);
-
+  const validatemsg = (event) => {
+    event.preventDefault();
     const msg = checkmsg(email.current.value, password.current.value);
     if (msg === "Valid") {
-      setErrorMsg("");
+      // Sign In or Sign Up
+      if (!isSignInForm) {
+        //Sign Up
+        createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+            navigate("/browse");
+          })
+          .catch((error) => {
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            setErrorMsg("Email already exists Please Sign In");
+          });
+      } else {
+        //Sign IN
+        signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+            navigate("/browse");
+          })
+          .catch((error) => {
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            setErrorMsg("Invalid Email or Password");
+          });
+      }
     } else {
-      setErrorMsg(msg);
+      setErrorMsg("Please enter a valid Email and Password");
     }
   };
 
-  const toggleBtn = () => {
+  const toggleBtn = (e) => {
+    e.preventDefault();
     setisSignInForm(!isSignInForm);
+    if (isSignInForm) {
+      setBtn("Sign Up");
+    } else {
+      setBtn("Sign In");
+    }
   };
 
   return (
@@ -68,7 +115,7 @@ const Login = () => {
             className="w-full p-2 m-2 bg-red-600 text-white rounded hover:bg-red-700"
             onClick={validatemsg}
           >
-            {isSignInForm ? "Sign In" : "Sign Up"}
+            {btn}
           </button>
           <span className="block text-center text-white mt-4">
             {isSignInForm ? "New To Netflix? " : "Already User? "}
