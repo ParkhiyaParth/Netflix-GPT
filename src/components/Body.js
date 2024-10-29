@@ -6,9 +6,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { addUser, removeUser } from "../utils/userSlice";
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
+import Error from "./Error";
 
 const Body = () => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   const appRouter = createBrowserRouter([
     {
@@ -19,18 +20,29 @@ const Body = () => {
       path: "/browse",
       element: <Browse />,
     },
+    {
+      path: "/error",
+      element: <Error />,
+    },
   ]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const { uid, email } = user;
-        dispatch(addUser({ uid: uid, email: email }));
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
+          })
+        );
       } else {
         dispatch(removeUser());
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

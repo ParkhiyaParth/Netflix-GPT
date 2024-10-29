@@ -4,6 +4,7 @@ import { checkmsg } from "../utils/Validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ const Login = () => {
 
   const email = useRef();
   const password = useRef();
+  const displayName = useRef();
 
   const validatemsg = (event) => {
     event.preventDefault();
@@ -31,8 +33,17 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
-            navigate("/browse");
+            updateProfile(user, {
+              displayName: "Parkhiya Parth",
+              photoURL:
+                "https://avatars.githubusercontent.com/u/139553225?v=4&size=64",
+            })
+              .then(() => {
+                navigate("/browse");
+              })
+              .catch((error) => {
+                setErrorMsg("Error Occured while Signing Up");
+              });
           })
           .catch((error) => {
             // const errorCode = error.code;
@@ -48,8 +59,17 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
-            navigate("/browse");
+            updateProfile(user, {
+              displayName: "Parkhiya Parth",
+              photoURL:
+                "https://avatars.githubusercontent.com/u/139553225?v=4&size=64",
+            })
+              .then(() => {
+                navigate("/browse");
+              })
+              .catch((error) => {
+                setErrorMsg("Error Occured while Signing Up");
+              });
           })
           .catch((error) => {
             // const errorCode = error.code;
@@ -93,6 +113,7 @@ const Login = () => {
           </h1>
           {!isSignInForm && (
             <input
+              ref={displayName}
               type="name"
               placeholder="Full Name"
               className="p-2 m-2 w-full bg-gray-700 text-white rounded"
