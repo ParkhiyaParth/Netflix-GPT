@@ -22,6 +22,7 @@ const Login = () => {
   const validatemsg = (event) => {
     event.preventDefault();
     const msg = checkmsg(email.current.value, password.current.value);
+    console.log("Validation Message:", msg);
     if (msg === "Valid") {
       // Sign In or Sign Up
       if (!isSignInForm) {
@@ -33,8 +34,9 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
+            console.log("User created:", user);
             updateProfile(user, {
-              displayName: "Parkhiya Parth",
+              displayName: displayName.current.value,
               photoURL:
                 "https://avatars.githubusercontent.com/u/139553225?v=4&size=64",
             })
@@ -42,12 +44,12 @@ const Login = () => {
                 navigate("/browse");
               })
               .catch((error) => {
+                console.error("Error updating profile:", error);
                 setErrorMsg("Error Occured while Signing Up");
               });
           })
           .catch((error) => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
+            console.error("Error creating user:", error);
             setErrorMsg("Email already exists Please Sign In");
           });
       } else {
@@ -59,8 +61,9 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
+            console.log("User signed in:", user);
             updateProfile(user, {
-              displayName: "Parkhiya Parth",
+              displayName: displayName.current.value,
               photoURL:
                 "https://avatars.githubusercontent.com/u/139553225?v=4&size=64",
             })
@@ -68,12 +71,12 @@ const Login = () => {
                 navigate("/browse");
               })
               .catch((error) => {
+                console.error("Error updating profile:", error);
                 setErrorMsg("Error Occured while Signing Up");
               });
           })
           .catch((error) => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
+            console.error("Error signing in:", error);
             setErrorMsg("Invalid Email or Password");
           });
       }
