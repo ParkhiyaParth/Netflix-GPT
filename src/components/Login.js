@@ -22,7 +22,7 @@ const Login = () => {
   const validatemsg = (event) => {
     event.preventDefault();
     const msg = checkmsg(email.current.value, password.current.value);
-    console.log("Validation Message:", msg);
+    // console.log("Validation Message:", msg);
     if (msg === "Valid") {
       // Sign In or Sign Up
       if (!isSignInForm) {
@@ -34,7 +34,7 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log("User created:", user);
+            // console.log("User created:", user);
             updateProfile(user, {
               displayName: displayName.current.value,
               photoURL:
@@ -61,7 +61,7 @@ const Login = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log("User signed in:", user);
+            // console.log("User signed in:", user);
             updateProfile(user, {
               displayName: displayName.current.value,
               photoURL:
